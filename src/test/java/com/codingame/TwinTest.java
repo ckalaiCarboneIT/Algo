@@ -1,51 +1,31 @@
 package com.codingame;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TwinTest {
 
-    @Test
-    public void testIsTwin_SameLettersDifferentOrder() {
-        assertTrue(Twin.isTwin("Marion", "Romain"));
+    @ParameterizedTest(name = "{index} => s1={0}, s2={1}, expected={2}")
+    @MethodSource("provideStringsForIsTwin")
+    void testIsTwin1(String s1, String s2, boolean expected) {
+        assertEquals(expected, Twin.isTwin1(s1, s2));
     }
 
-    @Test
-    public void testIsTwin_SameLettersSameOrder() {
-        assertTrue(Twin.isTwin("abc", "abc"));
-    }
-
-    @Test
-    public void testIsTwin_DifferentLetters() {
-        assertFalse(Twin.isTwin("abc", "def"));
-    }
-
-    @Test
-    public void testIsTwin_DifferentLengths() {
-        assertFalse(Twin.isTwin("abc", "abcd"));
-    }
-
-    @Test
-    public void testIsTwin_DifferentCase() {
-        assertTrue(Twin.isTwin("Marion", "romain"));
-    }
-
-    @Test
-    public void testIsTwin_EmptyStrings() {
-        assertTrue(Twin.isTwin("", ""));
-    }
-
-    @Test
-    public void testIsTwin_OneEmptyString() {
-        assertFalse(Twin.isTwin("abc", ""));
-    }
-
-    @Test
-    public void testIsTwin_NullStrings() {
-        assertFalse(Twin.isTwin(null, "abc"));
-        assertFalse(Twin.isTwin("abc", null));
-        assertFalse(Twin.isTwin(null, null));
+    private static Stream<Arguments> provideStringsForIsTwin() {
+        return Stream.of(Arguments.of("Marion", "Romain", true),
+                Arguments.of("abc", "abc", true),
+                Arguments.of("abc", "def", false),
+                Arguments.of("abc", "abcd", false),
+                Arguments.of("Marion", "romain", true),
+                Arguments.of("", "", true),
+                Arguments.of("abc", "", false),
+                Arguments.of(null, "abc", false),
+                Arguments.of("abc", null, false),
+                Arguments.of(null, null, false));
     }
 }
